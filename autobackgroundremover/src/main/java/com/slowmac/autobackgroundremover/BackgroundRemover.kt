@@ -1,6 +1,8 @@
 package com.slowmac.autobackgroundremover
 
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.util.Log
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.segmentation.Segmentation
 import com.google.mlkit.vision.segmentation.Segmenter
@@ -17,6 +19,7 @@ object BackgroundRemover {
 
 
     init {
+
         val segmentOptions = SelfieSegmenterOptions.Builder()
             .setDetectorMode(SelfieSegmenterOptions.SINGLE_IMAGE_MODE)
             .build()
@@ -28,7 +31,7 @@ object BackgroundRemover {
     /**
      * Process the image to get buffer and image height and width
      * */
-    fun bitmapForProcessing(image: Bitmap, listener: OnBackgroundChangeListener) {
+    fun bitmapForProcessing(image: Bitmap, listener: OnBackgroundChangeListener, tolerance: Int) {
         val input = InputImage.fromBitmap(image, 0)
         segment.process(input)
             .addOnSuccessListener { segmentationMask ->
@@ -37,7 +40,7 @@ object BackgroundRemover {
                 height = segmentationMask.height
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    val bitmap = removeBackgroundFromImage(image, listener)
+                    val bitmap = removeBackgroundFromImage(image, listener, tolerance)
                     withContext(Dispatchers.Main) {
                         listener.onSuccess(bitmap)
                     }
@@ -56,18 +59,26 @@ object BackgroundRemover {
     private suspend fun removeBackgroundFromImage(
         image: Bitmap,
         listener: OnBackgroundChangeListener,
+        tolerance: Int = 50,
     ): Bitmap {
         val bitmap = CoroutineScope(Dispatchers.IO).async {
             for (y in 0 until height) {
                 for (x in 0 until width) {
-                    val bgConfidence = ((1.0 - buffer.float) * 255).toInt()
-                    if (bgConfidence >= 100) {
+                    try {
+                        val bgConfidence = ((1.0 - buffer.float) * 250).toInt()
                         try {
-                            image.setPixel(x, y, 0)
+                            if (bgConfidence >= 250) {
+                                image.setPixel(x, y, Color.WHITE)
+                            } else if (bgConfidence > tolerance) {
+                                image.setPixel(x, y, Color.WHITE)
+//                                image.setPixel(x, y, Color.BLACK)
+                            }
                             listener.onChange(image)
                         } catch (e: Exception) {
+                            Log.d("texts", "removeBackgroundFromImage: 1 " + e.localizedMessage)
                         }
-
+                    } catch (e: Exception) {
+                        Log.d("texts", "removeBackgroundFromImage: 2 " + e.localizedMessage)
                     }
                 }
             }

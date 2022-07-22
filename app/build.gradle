@@ -4,6 +4,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('C:\\Users\\TestAccount\\AndroidStudioProjects\\BETA\\imagebackgroundremover\\imagebackgroundremover.jks')
+            storePassword 'imagebackgroundremover'
+            keyAlias 'imagebackgroundremover'
+            keyPassword 'imagebackgroundremover'
+        }
+    }
     compileSdk 32
 
     defaultConfig {
@@ -18,8 +26,12 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
@@ -37,6 +49,9 @@ android {
 
 dependencies {
 //    implementation 'com.github.GhayasAhmad:auto-background-remover:1.0.1'
+    implementation "com.anggrayudi:storage:1.4.0"
+
+    implementation 'com.airbnb.android:lottie:5.2.0'
 
     implementation 'com.github.bumptech.glide:glide:4.13.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'

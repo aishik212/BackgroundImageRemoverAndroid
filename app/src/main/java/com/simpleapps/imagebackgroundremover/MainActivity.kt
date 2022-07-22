@@ -1,7 +1,10 @@
 package com.simpleapps.imagebackgroundremover
 
+import android.Manifest
 import android.app.Activity
+import android.app.DownloadManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -9,104 +12,106 @@ import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.widget.SeekBar
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.scale
+import com.bumptech.glide.Glide
 import com.github.drjacky.imagepicker.ImagePicker
 import com.github.drjacky.imagepicker.constant.ImageProvider
 import com.simpleapps.imagebackgroundremover.databinding.ActivityMainBinding
 import com.slowmac.autobackgroundremover.BackgroundRemover
+import com.slowmac.autobackgroundremover.DownloadListener
 import com.slowmac.autobackgroundremover.OnBackgroundChangeListener
+import com.slowmac.autobackgroundremover.SaveBitmapTask
 import java.io.File
 import kotlin.math.max
+import kotlin.math.roundToInt
+
 
 class MainActivity : AppCompatActivity() {
+
+    var scale: Bitmap? = null
+    lateinit var target: File
+    lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val inflate = ActivityMainBinding.inflate(layoutInflater)
         setContentView(inflate.root)
-
-
+        requestPermissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+                if (isGranted) {
+                    Log.d("texts", "getPermission: GRANTED")
+                } else {
+                    Log.d("texts", "getPermission: REJECTED")
+                }
+            }
         val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
-                Log.d("texts", "onCreate: " + it)
                 val uri = it.data?.data!!
-                val file = File(uri.path)
                 try {
                     val fileFromUri = getFileFromUri(applicationContext, uri)
-                    val target = File("${cacheDir.absoluteFile}/images/${fileFromUri?.name}")
+                    target = File("${cacheDir.absoluteFile}/images/${fileFromUri?.name}")
                     target.parentFile.mkdirs()
                     target.delete()
+                    inflate.addView.visibility = GONE
+                    inflate.oldimg.visibility = VISIBLE
+                    inflate.procView.visibility = VISIBLE
+                    inflate.newimg.visibility = GONE
                     if (target.createNewFile()) {
-                        inflate.oldimg.setImageURI(Uri.fromFile(fileFromUri?.copyTo(target, true)))
+                        Glide.with(inflate.oldimg)
+                            .load(Uri.fromFile(fileFromUri?.copyTo(target, true)))
+                            .into(inflate.oldimg)
                     } else {
-                        inflate.oldimg.setImageURI(Uri.fromFile(fileFromUri?.copyTo(target, true)))
+                        Glide.with(inflate.oldimg)
+                            .load(Uri.fromFile(fileFromUri?.copyTo(target, true)))
+                            .into(inflate.oldimg)
                     }
-                    Log.d("texts", "onCreate: A " + target.absolutePath)
-                    Log.d("texts", "onCreate: A " + target.exists())
                     if (target.exists()) {
-                        Log.d("texts", "onCreate: B ")
+                        Glide.with(inflate.oldimg).load(Uri.fromFile(target)).into(inflate.oldimg)
                         inflate.oldimg.setImageURI(Uri.fromFile(target))
                         val decodeFile = BitmapFactory.decodeFile(target.absolutePath)
                         var width = decodeFile.width
                         var height = decodeFile.height
-                        val i = 1500
+                        val i = 1000
                         while (max(width, height) > i) {
                             width /= 2
                             height /= 2
                         }
-                        val scale = decodeFile.scale(width, height, true)
+                        scale = decodeFile.scale(width, height, true)
+                        inflate.addView.visibility = GONE
+                        inflate.oldimg.visibility = VISIBLE
+                        inflate.procView.visibility = VISIBLE
                         inflate.newimg.setImageBitmap(scale)
-                        BackgroundRemover.bitmapForProcessing(scale,
-                            object : OnBackgroundChangeListener {
-                                override fun onFailed(exception: java.lang.Exception) {
-                                    Log.d("texts", "onFailed: " + exception.localizedMessage)
-                                }
+                        val tolerance = 255
+                        inflate.seekBar.visibility = VISIBLE
+                        inflate.seekBar.setOnSeekBarChangeListener(object :
+                            SeekBar.OnSeekBarChangeListener {
+                            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                                inflate.progressTv.text =
+                                    "Threshold ${((p0?.progress ?: 0) * 100F / 255).roundToInt()}%"
+                            }
 
-                                override fun onChange(bitmap: Bitmap) {
-                                    val l = System.currentTimeMillis() - lastChange
-                                    if (l > 1000) {
-                                        Log.d("texts", "onChange: $l")
-                                        runOnUiThread {
-                                            inflate.newimg.setImageBitmap(bitmap)
-/*
-                                            Glide.with(inflate.newimg).load(bitmap)
-                                                .listener(object : RequestListener<Drawable> {
-                                                    override fun onResourceReady(
-                                                        resource: Drawable?,
-                                                        model: Any?,
-                                                        target: Target<Drawable>?,
-                                                        dataSource: DataSource?,
-                                                        isFirstResource: Boolean,
-                                                    ): Boolean {
-                                                        Log.d("texts", "onResourceReady: ")
-                                                        return true
-                                                    }
+                            override fun onStartTrackingTouch(p0: SeekBar?) {
 
-                                                    override fun onLoadFailed(
-                                                        e: GlideException?,
-                                                        model: Any?,
-                                                        target: Target<Drawable>?,
-                                                        isFirstResource: Boolean,
-                                                    ): Boolean {
-                                                        Log.d("texts",
-                                                            "onLoadFailed: " + e?.localizedMessage)
-                                                        return true
-                                                    }
 
-                                                }).into(inflate.newimg)
-*/
-                                        }
-//                                        inflate.newimg.setImageBitmap(bitmap)
-                                        lastChange = System.currentTimeMillis()
-                                    }
-                                }
+                            }
 
-                                override fun onSuccess(bitmap: Bitmap) {
-                                    inflate.newimg.setImageBitmap(bitmap)
-                                    Log.d("texts", "onSuccess: " + bitmap)
-                                }
-                            })
+                            override fun onStopTrackingTouch(p0: SeekBar?) {
+                                inflate.progressTv.visibility = VISIBLE
+                                inflate.progressTv.text =
+                                    "Threshold ${((p0?.progress ?: 0) * 100F / 255).roundToInt()}%"
+                                removeBG(inflate, p0?.progress ?: 50)
+                            }
+                        })
+                        removeBG(inflate, tolerance)
                     }
                 } catch (e: Exception) {
                     Log.d("texts", "onCreate: " + e.localizedMessage)
@@ -114,11 +119,113 @@ class MainActivity : AppCompatActivity() {
                 // Use the uri to load the image
             }
         }
+        inflate.switchImage.setOnClickListener {
+            ImagePicker.with(this)
+                .provider(ImageProvider.BOTH) //Or bothCameraGallery()
+                .maxResultSize(100, 100, true)
+                .createIntentFromDialog { launcher.launch(it) }
+        }
+    }
 
-        ImagePicker.with(this)
-            .provider(ImageProvider.BOTH) //Or bothCameraGallery()
-            .maxResultSize(100, 100, true)
-            .createIntentFromDialog { launcher.launch(it) }
+    private fun removeBG(
+        inflate: ActivityMainBinding,
+        tolerance: Int,
+    ) {
+        inflate.progressTv.visibility = VISIBLE
+        inflate.saveImg.visibility = GONE
+        inflate.newimg.visibility = GONE
+        val decodeFile = BitmapFactory.decodeFile(target.absolutePath)
+        var width = decodeFile.width
+        var height = decodeFile.height
+        val i = 1000
+        while (max(width, height) > i) {
+            width /= 2
+            height /= 2
+        }
+        scale = decodeFile.copy(Bitmap.Config.ARGB_8888, true).scale(width, height, true)
+        showProgressDialog(inflate)
+        val image = scale
+        if (image != null) {
+            BackgroundRemover.bitmapForProcessing(image,
+                object : OnBackgroundChangeListener {
+                    override fun onFailed(exception: java.lang.Exception) {
+                        Log.d("texts", "onFailed: " + exception.localizedMessage)
+                        hideProgressDialog(inflate)
+                    }
+
+                    override fun onChange(bitmap: Bitmap) {
+                        val l = System.currentTimeMillis() - lastChange
+                        if (l > 1000) {
+                            runOnUiThread {
+                                inflate.procView.visibility = VISIBLE
+                                inflate.saveImg.visibility = GONE
+                                inflate.newimg.visibility = GONE
+                            }
+                            lastChange = System.currentTimeMillis()
+                        }
+                    }
+
+                    override fun onSuccess(bitmap: Bitmap) {
+                        inflate.procView.visibility = GONE
+                        inflate.newimg.visibility = VISIBLE
+                        inflate.newimg.setImageBitmap(bitmap)
+                        inflate.saveImg.visibility = VISIBLE
+                        inflate.saveImg.setOnClickListener {
+                            val saveBitmapTask = SaveBitmapTask(applicationContext,
+                                target.name,
+                                bitmap,
+                                "BGRemover",
+                                object : DownloadListener {
+                                    override fun onSuccess(path: String) {
+                                        Toast.makeText(applicationContext,
+                                            "Saved to $path",
+                                            Toast.LENGTH_SHORT)
+                                            .show()
+                                        Log.d("texts", "onSuccess: " + path)
+                                    }
+
+                                    override fun onFailure(error: String) {
+                                        Log.d("texts", "onFailure: " + error)
+                                    }
+                                })
+                            saveBitmapTask.execute()
+                            if (hasPermissions()) {
+                            } else {
+                                getPermission()
+                            }
+                        }
+                        hideProgressDialog(inflate)
+                    }
+                }, tolerance)
+        }
+    }
+
+    var manager: DownloadManager? = null
+
+    private fun getPermission() {
+        Log.d("texts", "getPermission: ")
+    }
+
+
+    private fun hasPermissions(): Boolean {
+        val b = ContextCompat.checkSelfPermission(applicationContext,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        Log.d("texts", "hasPermissions: " + b)
+        return b
+    }
+
+    private fun showProgressDialog(inflate: ActivityMainBinding) {
+        runOnUiThread {
+            inflate.seekBar.isEnabled = false
+            inflate.switchImage.isEnabled = false
+        }
+    }
+
+    private fun hideProgressDialog(inflate: ActivityMainBinding) {
+        runOnUiThread {
+            inflate.seekBar.isEnabled = true
+            inflate.switchImage.isEnabled = true
+        }
     }
 
     var lastChange = System.currentTimeMillis()
