@@ -87,10 +87,6 @@ class SaveBitmapTask(
 
     }
 
-    /*
-    * ToDo.. Save Bitmap to the external storage
-    * */
-
     @Suppress("DEPRECATION")
     private fun saveImageToStorage(
         bitmap: Bitmap,
@@ -100,7 +96,7 @@ class SaveBitmapTask(
         mediaContentUri: Uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
     ) {
         val imageOutStream: OutputStream
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             Log.d("texts", "saveImageToStorage: a")
             var outputDirectory = directory
 
@@ -140,7 +136,6 @@ class SaveBitmapTask(
             if (!desFile.exists()) {
                 desFile.mkdir()
             }
-            Log.d("texts", "saveImageToStorage: " + desFile.absolutePath)
             val image = File(imagePath, filename)
             // final output path
             outputPath = image.path

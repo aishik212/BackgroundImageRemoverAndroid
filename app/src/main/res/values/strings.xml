@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Image Background Remover</string>
+
+
+    <string name="app_id">ca-app-pub-5453528366471630~3604502546</string>
+    <string name="native_ad_id">ca-app-pub-5453528366471630/2099849180</string>
 </resources>

@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/autobackgroundremover" />
             <option value="$PROJECT_DIR$/cutout" />
+            <option value="$PROJECT_DIR$/nativetemplates" />
           </set>
         </option>
       </GradleProjectSettings>

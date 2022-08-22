@@ -20,3 +20,4 @@ rootProject.name = "Image Background Remover"
 include ':app'
 include ':cutout'
 include ':autobackgroundremover'
+include ':nativetemplates'
