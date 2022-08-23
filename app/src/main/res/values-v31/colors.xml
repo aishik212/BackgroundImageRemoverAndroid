@@ -5,6 +5,7 @@
     <color name="primaryDarkColor">@color/material_dynamic_primary10</color>
     <color name="secondaryColor">@color/material_dynamic_secondary40</color>
     <color name="secondaryLightColor">@color/material_dynamic_secondary70</color>
+    <color name="secondaryLighterColor">@color/material_dynamic_secondary99</color>
     <color name="secondaryDarkColor">@color/material_dynamic_secondary10</color>
     <color name="primaryTextColor">@color/material_dynamic_tertiary90</color>
     <color name="secondaryTextColor">@color/material_dynamic_tertiary10</color>

@@ -29,8 +29,9 @@
 
                 <ImageView
                     android:id="@+id/icon"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="3dp"
                     android:layout_marginStart="@dimen/gnt_no_margin"
                     android:layout_marginTop="@dimen/gnt_no_margin"
                     android:layout_marginEnd="@dimen/gnt_no_margin"
@@ -56,6 +57,7 @@
                         android:id="@+id/headline"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="3dp"
                         android:layout_weight="@dimen/gnt_text_row_weight"
                         android:background="@color/gnt_test_background_color"
                         android:orientation="horizontal"
@@ -155,6 +157,7 @@
                         android:id="@+id/cta"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="3dp"
                         android:background="@color/gnt_blue"
                         android:gravity="center"
                         android:lines="1"

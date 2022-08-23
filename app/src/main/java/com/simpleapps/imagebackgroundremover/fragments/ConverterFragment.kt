@@ -2,6 +2,7 @@ package com.simpleapps.imagebackgroundremover.fragments
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.DownloadManager
 import android.content.Context
 import android.content.pm.PackageManager
@@ -24,9 +25,19 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.github.drjacky.imagepicker.ImagePicker
 import com.github.drjacky.imagepicker.constant.ImageProvider
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback
 import com.simpleapps.imagebackgroundremover.MainActivity.Companion.hasPermissions
 import com.simpleapps.imagebackgroundremover.MainActivity.Companion.requestPermissionLauncher
+import com.simpleapps.imagebackgroundremover.R
+import com.simpleapps.imagebackgroundremover.databinding.DownloadConfirmationLayoutBinding
 import com.simpleapps.imagebackgroundremover.databinding.FragmentConverterBinding
+import com.simpleapps.imagebackgroundremover.databinding.IntersAdLoadingLayoutBinding
+import com.simpleapps.imagebackgroundremover.utilities.utils
 import com.slowmac.autobackgroundremover.BackgroundRemover
 import com.slowmac.autobackgroundremover.DownloadListener
 import com.slowmac.autobackgroundremover.OnBackgroundChangeListener
@@ -156,7 +167,7 @@ class ConverterFragment : Fragment() {
         val decodeFile = BitmapFactory.decodeFile(target.absolutePath)
         var width = decodeFile.width
         var height = decodeFile.height
-        val i = 1000
+        val i = 1500
         while (max(width, height) > i) {
             width /= 2
             height /= 2
@@ -165,11 +176,13 @@ class ConverterFragment : Fragment() {
         showProgressDialog(inflate)
         val image = scale
         if (image != null) {
+            utils.logProcessingEvent(context, "START")
             BackgroundRemover.bitmapForProcessing(image,
                 object : OnBackgroundChangeListener {
                     override fun onFailed(exception: java.lang.Exception) {
                         Log.d("texts", "onFailed: " + exception.localizedMessage)
                         hideProgressDialog(inflate)
+                        utils.logProcessingEvent(context, "FAIL_${exception.localizedMessage}")
                     }
 
                     override fun onChange(bitmap: Bitmap) {
@@ -185,6 +198,7 @@ class ConverterFragment : Fragment() {
                     }
 
                     override fun onSuccess(bitmap: Bitmap) {
+                        utils.logProcessingEvent(context, "SUCCESS")
                         inflate.procView.visibility = View.GONE
                         inflate.newimg.visibility = View.VISIBLE
                         inflate.newimg.setImageBitmap(bitmap)
@@ -196,28 +210,107 @@ class ConverterFragment : Fragment() {
                             getPermission()
                         }
                         inflate.saveImg.setOnClickListener {
-                            val saveBitmapTask = SaveBitmapTask(FragContext,
-                                target.name,
-                                bitmap,
-                                "BGRemover",
-                                object : DownloadListener {
-                                    override fun onSuccess(path: String) {
-                                        Toast.makeText(FragContext,
-                                            "Saved to $path",
-                                            Toast.LENGTH_SHORT)
-                                            .show()
-                                    }
+                            utils.logClickEvent(context, "SAVE")
+                            showSaveDialog(bitmap, object : save {
+                                override fun saveBitmap(divideBy: Int) {
+                                    val outputImage = bitmap.scale(
+                                        bitmap.width / divideBy,
+                                        bitmap.height / divideBy
+                                    )
+                                    Log.d("texts",
+                                        "onSuccess: " + outputImage.width + " " + outputImage.height)
+                                    val saveBitmapTask = SaveBitmapTask(FragContext,
+                                        target.name,
+                                        outputImage,
+                                        "BGRemover",
+                                        object : DownloadListener {
+                                            override fun onSuccess(path: String) {
+                                                Toast.makeText(FragContext,
+                                                    "Saved to $path",
+                                                    Toast.LENGTH_SHORT)
+                                                    .show()
+                                            }
 
-                                    override fun onFailure(error: String) {
-                                        Log.d("texts", "onFailure: " + error)
-                                    }
-                                })
-                            saveBitmapTask.execute()
+                                            override fun onFailure(error: String) {
+                                                Log.d("texts", "onFailure: " + error)
+                                            }
+                                        })
+                                    saveBitmapTask.execute()
+                                }
+                            })
                         }
                         hideProgressDialog(inflate)
                     }
                 }, tolerance)
         }
+    }
+
+    interface save {
+        fun saveBitmap(divideBy: Int)
+    }
+
+    private fun showSaveDialog(bitmap: Bitmap, save: save) {
+        val builder = AlertDialog.Builder(context, R.style.DialogTheme)
+        val inflate1 = DownloadConfirmationLayoutBinding.inflate(layoutInflater)
+        builder.setView(inflate1.root)
+        var create: AlertDialog? = null
+        inflate1.downloadButton.setOnClickListener {
+            if (inflate1.radioButton.isChecked) {
+                utils.logClickEvent(context, "SAVE_LOW")
+                create?.dismiss()
+                save.saveBitmap(2)
+            } else {
+                utils.logClickEvent(context, "SAVE_HIGH")
+                val activity = activity
+                create?.dismiss()
+                if (activity != null) {
+                    val builder2 = AlertDialog.Builder(context, R.style.DialogTheme)
+                    val adLoadingLayoutBinding =
+                        IntersAdLoadingLayoutBinding.inflate(layoutInflater)
+                    builder2.setView(adLoadingLayoutBinding.root)
+                    val create1 = builder2.create()
+                    create1.show()
+                    RewardedInterstitialAd.load(activity,
+                        activity.getString(R.string.download_rins_all_ad_id),
+                        AdRequest.Builder().build(),
+                        object : RewardedInterstitialAdLoadCallback() {
+                            override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                                super.onAdFailedToLoad(loadAdError)
+                                create1.dismiss()
+                                save.saveBitmap(2)
+                            }
+
+                            override fun onAdLoaded(rewardedInterstitialAd: RewardedInterstitialAd) {
+                                super.onAdLoaded(rewardedInterstitialAd)
+                                rewardedInterstitialAd.fullScreenContentCallback = object :
+                                    FullScreenContentCallback() {
+                                    override fun onAdDismissedFullScreenContent() {
+                                        super.onAdDismissedFullScreenContent()
+                                        save.saveBitmap(1)
+                                    }
+
+                                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                                        super.onAdFailedToShowFullScreenContent(adError)
+                                        Log.d("texts",
+                                            "onAdFailedToShowFullScreenContent: " + adError.message)
+                                        save.saveBitmap(2)
+                                    }
+                                }
+                                create1.dismiss()
+                                rewardedInterstitialAd.show(activity) { }
+                            }
+                        })
+                } else {
+                    save.saveBitmap(2)
+                }
+            }
+        }
+        inflate1.cancelButton.setOnClickListener {
+            utils.logClickEvent(context, "SAVE_CANCEL")
+            create?.dismiss()
+        }
+        create = builder.create()
+        create?.show()
     }
 
 

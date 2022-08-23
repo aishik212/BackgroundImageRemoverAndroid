@@ -29,7 +29,6 @@ class MainActivity : AppCompatActivity() {
             return ContextCompat.checkSelfPermission(context,
                 s) == PackageManager.PERMISSION_GRANTED
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,9 +53,8 @@ class MainActivity : AppCompatActivity() {
         val adapter = ViewPagerAdapter(supportFragmentManager, lifecycle)
         viewPager.adapter = adapter
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            val i = iconList[position]
             tab.icon = getDrawable(iconList[position])
-            tab.text = titleList[position]
+//            tab.text = titleList[position]
         }.attach()
     }
 

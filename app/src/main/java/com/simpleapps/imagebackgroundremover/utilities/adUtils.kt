@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.View.VISIBLE
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -59,7 +58,6 @@ public class adUtils {
                 b.putString("ErrorMessage", "$errorAdType $error")
             }
             if (activity != null) {
-                Log.d("texts", "logAdResult: $b")
                 FirebaseAnalytics.getInstance(activity).logEvent("AdLog", b)
                 if (AdType != null && AdType == "AdKinowa") {
                     val bundle = Bundle()
@@ -108,7 +106,7 @@ public class adUtils {
 
         private fun restartAdLoad(frameLayout: FrameLayout, activity: Activity) {
             if (!activity.isDestroyed) {
-                object : CountDownTimer(if (BuildConfig.DEBUG) 5000 else 20000, 1000) {
+                object : CountDownTimer(if (BuildConfig.DEBUG) 25000 else 30000, 1000) {
                     override fun onTick(p0: Long) {
                         //Useless
                     }
