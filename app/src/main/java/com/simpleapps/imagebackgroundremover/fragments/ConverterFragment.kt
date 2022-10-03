@@ -22,6 +22,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.scale
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.github.drjacky.imagepicker.ImagePicker
 import com.github.drjacky.imagepicker.constant.ImageProvider
@@ -37,6 +38,8 @@ import com.simpleapps.imagebackgroundremover.R
 import com.simpleapps.imagebackgroundremover.databinding.DownloadConfirmationLayoutBinding
 import com.simpleapps.imagebackgroundremover.databinding.FragmentConverterBinding
 import com.simpleapps.imagebackgroundremover.databinding.IntersAdLoadingLayoutBinding
+import com.simpleapps.imagebackgroundremover.utilities.adUtils.Companion.loadTestStartAd
+import com.simpleapps.imagebackgroundremover.utilities.adUtils.Companion.testStartInterstitialAd
 import com.simpleapps.imagebackgroundremover.utilities.utils
 import com.slowmac.autobackgroundremover.BackgroundRemover
 import com.slowmac.autobackgroundremover.DownloadListener
@@ -213,12 +216,18 @@ class ConverterFragment : Fragment() {
                             utils.logClickEvent(context, "SAVE")
                             showSaveDialog(bitmap, object : save {
                                 override fun saveBitmap(divideBy: Int) {
-                                    val outputImage = bitmap.scale(
+                                    var outputImage = bitmap.scale(
                                         bitmap.width / divideBy,
                                         bitmap.height / divideBy
                                     )
-                                    Log.d("texts",
-                                        "onSuccess: " + outputImage.width + " " + outputImage.height)
+                                    if (divideBy == 2) {
+                                        while (outputImage.width > 200) {
+                                            outputImage = bitmap.scale(
+                                                outputImage.width - 50,
+                                                outputImage.height - 50
+                                            )
+                                        }
+                                    }
                                     val saveBitmapTask = SaveBitmapTask(FragContext,
                                         target.name,
                                         outputImage,
@@ -249,6 +258,8 @@ class ConverterFragment : Fragment() {
         fun saveBitmap(divideBy: Int)
     }
 
+    var adLoadingDialog: AlertDialog? = null
+
     private fun showSaveDialog(bitmap: Bitmap, save: save) {
         val builder = AlertDialog.Builder(context, R.style.DialogTheme)
         val inflate1 = DownloadConfirmationLayoutBinding.inflate(layoutInflater)
@@ -268,38 +279,28 @@ class ConverterFragment : Fragment() {
                     val adLoadingLayoutBinding =
                         IntersAdLoadingLayoutBinding.inflate(layoutInflater)
                     builder2.setView(adLoadingLayoutBinding.root)
-                    val create1 = builder2.create()
-                    create1.show()
-                    RewardedInterstitialAd.load(activity,
-                        activity.getString(R.string.download_rins_all_ad_id),
-                        AdRequest.Builder().build(),
-                        object : RewardedInterstitialAdLoadCallback() {
-                            override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                                super.onAdFailedToLoad(loadAdError)
-                                create1.dismiss()
-                                save.saveBitmap(2)
-                            }
-
-                            override fun onAdLoaded(rewardedInterstitialAd: RewardedInterstitialAd) {
-                                super.onAdLoaded(rewardedInterstitialAd)
-                                rewardedInterstitialAd.fullScreenContentCallback = object :
-                                    FullScreenContentCallback() {
-                                    override fun onAdDismissedFullScreenContent() {
-                                        super.onAdDismissedFullScreenContent()
-                                        save.saveBitmap(1)
-                                    }
-
-                                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                                        super.onAdFailedToShowFullScreenContent(adError)
-                                        Log.d("texts",
-                                            "onAdFailedToShowFullScreenContent: " + adError.message)
-                                        save.saveBitmap(2)
-                                    }
+                    adLoadingDialog = builder2.create()
+                    adLoadingDialog?.show()
+                    if (testStartInterstitialAd != null) {
+                        testStartInterstitialAd?.fullScreenContentCallback =
+                            object : FullScreenContentCallback() {
+                                override fun onAdDismissedFullScreenContent() {
+                                    super.onAdDismissedFullScreenContent()
+                                    adLoadingDialog?.dismiss()
+                                    save.saveBitmap(1)
                                 }
-                                create1.dismiss()
-                                rewardedInterstitialAd.show(activity) { }
+
+                                override fun onAdFailedToShowFullScreenContent(p0: AdError) {
+                                    super.onAdFailedToShowFullScreenContent(p0)
+                                    adLoadingDialog?.dismiss()
+                                    save.saveBitmap(2)
+                                }
                             }
-                        })
+                        testStartInterstitialAd?.show(activity) {}
+                        loadTestStartAd(activity)
+                    } else {
+                        showDownloadAd(activity, save)
+                    }
                 } else {
                     save.saveBitmap(2)
                 }
@@ -311,6 +312,42 @@ class ConverterFragment : Fragment() {
         }
         create = builder.create()
         create?.show()
+    }
+
+    private fun showDownloadAd(
+        activity: FragmentActivity,
+        save: save,
+    ) {
+        RewardedInterstitialAd.load(activity,
+            activity.getString(R.string.download_rins_all_ad_id),
+            AdRequest.Builder().build(),
+            object : RewardedInterstitialAdLoadCallback() {
+                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                    super.onAdFailedToLoad(loadAdError)
+                    adLoadingDialog?.dismiss()
+                    save.saveBitmap(2)
+                }
+
+                override fun onAdLoaded(rewardedInterstitialAd: RewardedInterstitialAd) {
+                    super.onAdLoaded(rewardedInterstitialAd)
+                    rewardedInterstitialAd.fullScreenContentCallback = object :
+                        FullScreenContentCallback() {
+                        override fun onAdDismissedFullScreenContent() {
+                            super.onAdDismissedFullScreenContent()
+                            save.saveBitmap(1)
+                        }
+
+                        override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                            super.onAdFailedToShowFullScreenContent(adError)
+                            Log.d("texts",
+                                "onAdFailedToShowFullScreenContent: " + adError.message)
+                            save.saveBitmap(2)
+                        }
+                    }
+                    adLoadingDialog?.dismiss()
+                    rewardedInterstitialAd.show(activity) { }
+                }
+            })
     }
 
 

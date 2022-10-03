@@ -16,6 +16,8 @@ import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.simpleapps.imagebackgroundremover.BuildConfig
 
@@ -119,18 +121,60 @@ public class adUtils {
         }
 
 
-/*
-        private fun checkSpread() {
-            val hmap: HashMap<Int, Long> = hashMapOf()
-            var i = 0
-            while (i < 12000) {
-                val key = (floor(Math.random() * 6.0).toInt())
-                val l = hmap[key] ?: 0
-                hmap[key] = l + 1
-                i++
+        var bought = 0
+        var testStartInterstitialAd: RewardedInterstitialAd? = null
+
+        fun loadTestStartAd(activity: Activity, adType: Int = 0) {
+            if (bought == 0) {
+                val adRequest = AdRequest.Builder().build()
+                var adId =
+                    activity.getString(com.simpleapps.imagebackgroundremover.R.string.rins_high_ad_id)
+                var adTypeText = "HIGH"
+
+                when (adType) {
+                    0 -> {
+                        adId =
+                            activity.getString(com.simpleapps.imagebackgroundremover.R.string.rins_high_ad_id)
+                        adTypeText = "HIGH"
+                    }
+                    1 -> {
+                        adId =
+                            activity.getString(com.simpleapps.imagebackgroundremover.R.string.rins_med_ad_id)
+                        adTypeText = "MED"
+                    }
+                    2 -> {
+                        adId =
+                            activity.getString(com.simpleapps.imagebackgroundremover.R.string.rins_all_ad_id)
+                        adTypeText = "ALL"
+                    }
+                }
+
+                if (adType < 3) {
+                    RewardedInterstitialAd.load(
+                        activity,
+                        adId,
+                        adRequest,
+                        object : RewardedInterstitialAdLoadCallback() {
+                            override fun onAdLoaded(interstitialAd: RewardedInterstitialAd) {
+                                logAdResult("BGR_RIAD_$adTypeText", null, null, activity)
+                                testStartInterstitialAd = interstitialAd
+                            }
+
+                            override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                                logAdResult(
+                                    null,
+                                    "BGR_RIAD_$adTypeText",
+                                    loadAdError.message,
+                                    activity
+                                )
+                                loadTestStartAd(activity, (adType + 1))
+                            }
+                        })
+                } else {
+                    testStartInterstitialAd = null
+                }
             }
         }
-*/
 
     }
 }

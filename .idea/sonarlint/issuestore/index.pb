@@ -7,8 +7,6 @@ T
 $nativetemplates/proguard-rules.pgcfg,d\4\d45b4367cbeaa82979248430adbcc6efa5ad66e6
 L
 nativetemplates/build.gradle,a\0\a084fa664f68b1860dc3a10134fe1db3107ca51b
-R
-"autobackgroundremover/build.gradle,2\7\27d7eb99b2ad572dcc090701ca535dd473695aa9
 H
 app/google-services.json,f\d\fd8d34b142d02ec743a8efefefd2c097961666e9
 
@@ -29,3 +27,10 @@ P
 Yapp/src/main/java/com/simpleapps/imagebackgroundremover/activities/ImageViewerActivity.kt,2\c\2c3fddeecc8b72e59ff8caa9d0fe9cf54e404fec
 †
 Vnativetemplates/src/main/java/com/google/android/ads/nativetemplates/TemplateView.java,a\9\a9e27871a45250a616888b18d7e77f385a1fc524
+z
+Japp/src/main/java/com/simpleapps/imagebackgroundremover/utilities/utils.kt,c\f\cf015abe4f94ea0d5424af70eb297b89abfea74b
+:
+
+.gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
+R
+"autobackgroundremover/build.gradle,2\7\27d7eb99b2ad572dcc090701ca535dd473695aa9
