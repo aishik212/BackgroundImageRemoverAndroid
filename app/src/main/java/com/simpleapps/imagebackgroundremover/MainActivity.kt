@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.WindowManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -23,8 +24,13 @@ import com.simpleapps.imagebackgroundremover.databinding.ActivityMainBinding
 import com.simpleapps.imagebackgroundremover.databinding.IntersAdLoadingLayoutBinding
 import com.simpleapps.imagebackgroundremover.fragments.ConverterFragment
 import com.simpleapps.imagebackgroundremover.fragments.GalleryFragment
-import com.simpleapps.imagebackgroundremover.utilities.adUtils
-import com.simpleapps.imagebackgroundremover.utilities.adUtils.Companion.testStartInterstitialAd
+import com.simpleapps.imagebackgroundremover.utilities.AdUtils
+import com.simpleapps.imagebackgroundremover.utilities.AdUtils.Companion.testStartInterstitialAd
+import com.simpleapps.imagebackgroundremover.utilities.utils
+import com.suddenh4x.ratingdialog.AppRating
+import com.suddenh4x.ratingdialog.preferences.MailSettings
+import com.suddenh4x.ratingdialog.preferences.RatingThreshold
+import kotlin.math.roundToInt
 
 
 class MainActivity : AppCompatActivity() {
@@ -65,6 +71,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
+        var ratingDialog: AppRating.Builder? = null
+
         lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
         fun hasPermissions(s: String, context: Context): Boolean {
             return ContextCompat.checkSelfPermission(context,
@@ -76,6 +84,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val inflate = ActivityMainBinding.inflate(layoutInflater)
         setContentView(inflate.root)
+        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         requestPermissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestPermission()
             ) { isGranted: Boolean ->
@@ -86,9 +95,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         MobileAds.initialize(applicationContext) {
-            adUtils.showNativeAd(inflate.adView,
+            AdUtils.showNativeAd(inflate.adView,
                 this@MainActivity)
-            adUtils.loadTestStartAd(this)
+            AdUtils.loadTestStartAd(this)
         }
         val tabLayout = inflate.tabLayout
         val viewPager = inflate.viewpager
@@ -98,10 +107,39 @@ class MainActivity : AppCompatActivity() {
             tab.icon = getDrawable(iconList[position])
 //            tab.text = titleList[position]
         }.attach()
+        val mailSettings =
+            MailSettings("simpleappsofficial@gmail.com",
+                "Bug Report BGRemover", "Please Enter Your Feedback Here \n")
+        val bundle = Bundle()
+        ratingDialog = AppRating.Builder(this)
+            .setMinimumLaunchTimes(1)
+            .setMinimumDays(0)
+            .setMinimumLaunchTimesToShowAgain(0)
+            .setMinimumDaysToShowAgain(0)
+            .setShowOnlyFullStars(true)
+            .setMailSettingsForFeedbackDialog(mailSettings)
+            .setRateLaterButtonClickListener {
+                bundle.putString(utils.Companion.EventKeys.RATING.name, "RATE LATER")
+                utils.logEvent(this, utils.Companion.EventKeys.RATING, bundle)
+            }
+            .setNoFeedbackButtonClickListener {
+                bundle.putString(utils.Companion.EventKeys.RATING.name, "NO FEEDBACK")
+                utils.logEvent(this, utils.Companion.EventKeys.RATING, bundle)
+            }
+            .setConfirmButtonClickListener { userRating ->
+                bundle.putString(utils.Companion.EventKeys.RATING.name,
+                    "RATE - ${userRating.roundToInt()}")
+                utils.logEvent(this, utils.Companion.EventKeys.RATING, bundle)
+            }.setGoogleInAppReviewCompleteListener {
+                bundle.putString(utils.Companion.EventKeys.RATING.name,
+                    "REVIEWED_DIALOG")
+                utils.logEvent(this, utils.Companion.EventKeys.RATING, bundle)
+            }
+            .setRatingThreshold(RatingThreshold.FOUR)
+            .setCustomTheme(R.style.MyAlertDialogTheme)
     }
 
-    var iconList = listOf(R.drawable.ic_baseline_home_24,
-        com.github.drjacky.imagepicker.R.drawable.ic_photo_black_48dp)
+    var iconList = listOf(R.drawable.ic_baseline_home_24, R.drawable.ic_baseline_photo_library_24)
     var titleList = listOf("Home", "Saved Images")
 
 

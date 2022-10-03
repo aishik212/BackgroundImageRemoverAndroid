@@ -97,7 +97,6 @@ class SaveBitmapTask(
     ) {
         val imageOutStream: OutputStream
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            Log.d("texts", "saveImageToStorage: a")
             var outputDirectory = directory
 
             // If you want to create custom directory inside Download directory only
@@ -121,7 +120,6 @@ class SaveBitmapTask(
                 imageOutStream = openOutputStream(uri) ?: return
             }
         } else {
-            Log.d("texts", "saveImageToStorage: b")
             // first we create app name folder direct to the root directory
             var imagePath =
                 Environment.getExternalStorageDirectory().path + File.separator + outputDir

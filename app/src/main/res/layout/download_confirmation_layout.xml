@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center">
@@ -37,6 +38,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
         <RadioGroup
+            android:id="@+id/rgroup"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:checkedButton="@id/radioButton">
@@ -45,7 +47,7 @@
                 android:id="@+id/radioButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Low Quality" />
+                android:text="Low Quality + Watermark" />
 
             <RadioButton
                 android:id="@+id/radioButton2"
@@ -54,6 +56,13 @@
                 android:drawableEnd="@drawable/advertisement"
                 android:text="High Quality" />
         </RadioGroup>
+
+        <ImageView
+            android:id="@+id/outputPreview"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:scaleType="fitCenter"
+            tools:srcCompat="@tools:sample/avatars" />
 
         <Button
             android:id="@+id/download_button"

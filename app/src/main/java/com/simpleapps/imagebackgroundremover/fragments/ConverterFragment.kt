@@ -33,13 +33,14 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback
 import com.simpleapps.imagebackgroundremover.MainActivity.Companion.hasPermissions
+import com.simpleapps.imagebackgroundremover.MainActivity.Companion.ratingDialog
 import com.simpleapps.imagebackgroundremover.MainActivity.Companion.requestPermissionLauncher
 import com.simpleapps.imagebackgroundremover.R
 import com.simpleapps.imagebackgroundremover.databinding.DownloadConfirmationLayoutBinding
 import com.simpleapps.imagebackgroundremover.databinding.FragmentConverterBinding
 import com.simpleapps.imagebackgroundremover.databinding.IntersAdLoadingLayoutBinding
-import com.simpleapps.imagebackgroundremover.utilities.adUtils.Companion.loadTestStartAd
-import com.simpleapps.imagebackgroundremover.utilities.adUtils.Companion.testStartInterstitialAd
+import com.simpleapps.imagebackgroundremover.utilities.AdUtils.Companion.loadTestStartAd
+import com.simpleapps.imagebackgroundremover.utilities.AdUtils.Companion.testStartInterstitialAd
 import com.simpleapps.imagebackgroundremover.utilities.utils
 import com.slowmac.autobackgroundremover.BackgroundRemover
 import com.slowmac.autobackgroundremover.DownloadListener
@@ -213,9 +214,10 @@ class ConverterFragment : Fragment() {
                             getPermission()
                         }
                         inflate.saveImg.setOnClickListener {
-                            utils.logClickEvent(context, "SAVE")
-                            showSaveDialog(bitmap, object : save {
+                            showSaveDialog(bitmap, object : SaveResult {
                                 override fun saveBitmap(divideBy: Int) {
+                                    utils.logSaveEvent(context,
+                                        if (divideBy == 2) "Low" else "High")
                                     var outputImage = bitmap.scale(
                                         bitmap.width / divideBy,
                                         bitmap.height / divideBy
@@ -227,6 +229,8 @@ class ConverterFragment : Fragment() {
                                                 outputImage.height - 50
                                             )
                                         }
+                                        outputImage =
+                                            utils.mark(outputImage, "SimpleAppsOfficial", context)
                                     }
                                     val saveBitmapTask = SaveBitmapTask(FragContext,
                                         target.name,
@@ -238,10 +242,11 @@ class ConverterFragment : Fragment() {
                                                     "Saved to $path",
                                                     Toast.LENGTH_SHORT)
                                                     .show()
+                                                ratingDialog?.showIfMeetsConditions()
                                             }
 
                                             override fun onFailure(error: String) {
-                                                Log.d("texts", "onFailure: " + error)
+                                                Log.d("texts", "onFailure: $error")
                                             }
                                         })
                                     saveBitmapTask.execute()
@@ -254,24 +259,40 @@ class ConverterFragment : Fragment() {
         }
     }
 
-    interface save {
+    interface SaveResult {
         fun saveBitmap(divideBy: Int)
     }
 
     var adLoadingDialog: AlertDialog? = null
 
-    private fun showSaveDialog(bitmap: Bitmap, save: save) {
+    lateinit var outputImage: Bitmap
+    private fun showSaveDialog(bitmap: Bitmap, saveResult: SaveResult) {
         val builder = AlertDialog.Builder(context, R.style.DialogTheme)
         val inflate1 = DownloadConfirmationLayoutBinding.inflate(layoutInflater)
         builder.setView(inflate1.root)
         var create: AlertDialog? = null
+        outputImage = bitmap
+        while (outputImage.width > 200) {
+            outputImage = bitmap.scale(
+                outputImage.width - 50,
+                outputImage.height - 50
+            )
+        }
+        outputImage = utils.mark(outputImage, "SimpleAppsOfficial", context)
+        inflate1.outputPreview.setImageBitmap(outputImage)
+        inflate1.rgroup.setOnCheckedChangeListener { _, i ->
+            if (i == R.id.radioButton) {
+                inflate1.outputPreview.setImageBitmap(outputImage)
+            } else {
+                inflate1.outputPreview.setImageBitmap(bitmap)
+            }
+        }
+        inflate1.radioButton.performClick()
         inflate1.downloadButton.setOnClickListener {
             if (inflate1.radioButton.isChecked) {
-                utils.logClickEvent(context, "SAVE_LOW")
                 create?.dismiss()
-                save.saveBitmap(2)
+                saveResult.saveBitmap(2)
             } else {
-                utils.logClickEvent(context, "SAVE_HIGH")
                 val activity = activity
                 create?.dismiss()
                 if (activity != null) {
@@ -287,22 +308,22 @@ class ConverterFragment : Fragment() {
                                 override fun onAdDismissedFullScreenContent() {
                                     super.onAdDismissedFullScreenContent()
                                     adLoadingDialog?.dismiss()
-                                    save.saveBitmap(1)
+                                    saveResult.saveBitmap(1)
                                 }
 
                                 override fun onAdFailedToShowFullScreenContent(p0: AdError) {
                                     super.onAdFailedToShowFullScreenContent(p0)
                                     adLoadingDialog?.dismiss()
-                                    save.saveBitmap(2)
+                                    saveResult.saveBitmap(2)
                                 }
                             }
                         testStartInterstitialAd?.show(activity) {}
                         loadTestStartAd(activity)
                     } else {
-                        showDownloadAd(activity, save)
+                        showDownloadAd(activity, saveResult)
                     }
                 } else {
-                    save.saveBitmap(2)
+                    saveResult.saveBitmap(2)
                 }
             }
         }
@@ -316,7 +337,7 @@ class ConverterFragment : Fragment() {
 
     private fun showDownloadAd(
         activity: FragmentActivity,
-        save: save,
+        saveResult: SaveResult,
     ) {
         RewardedInterstitialAd.load(activity,
             activity.getString(R.string.download_rins_all_ad_id),
@@ -325,7 +346,7 @@ class ConverterFragment : Fragment() {
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                     super.onAdFailedToLoad(loadAdError)
                     adLoadingDialog?.dismiss()
-                    save.saveBitmap(2)
+                    saveResult.saveBitmap(2)
                 }
 
                 override fun onAdLoaded(rewardedInterstitialAd: RewardedInterstitialAd) {
@@ -334,14 +355,14 @@ class ConverterFragment : Fragment() {
                         FullScreenContentCallback() {
                         override fun onAdDismissedFullScreenContent() {
                             super.onAdDismissedFullScreenContent()
-                            save.saveBitmap(1)
+                            saveResult.saveBitmap(1)
                         }
 
                         override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                             super.onAdFailedToShowFullScreenContent(adError)
                             Log.d("texts",
                                 "onAdFailedToShowFullScreenContent: " + adError.message)
-                            save.saveBitmap(2)
+                            saveResult.saveBitmap(2)
                         }
                     }
                     adLoadingDialog?.dismiss()

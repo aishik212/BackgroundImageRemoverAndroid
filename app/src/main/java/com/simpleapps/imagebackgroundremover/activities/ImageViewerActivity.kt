@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.simpleapps.imagebackgroundremover.databinding.ImageViewerLayoutBinding
-import com.simpleapps.imagebackgroundremover.utilities.adUtils
+import com.simpleapps.imagebackgroundremover.utilities.AdUtils
 import java.io.File
 
 class ImageViewerActivity : Activity() {
@@ -22,7 +22,7 @@ class ImageViewerActivity : Activity() {
             Log.d("texts", "onCreate: " + file.absolutePath)
             Log.d("texts", "onCreate: " + file.canRead())
             inflate.zoomV.setImageURI(Uri.parse(extras.get("image").toString()))
-            adUtils.showNativeAd(inflate.adView, this)
+            AdUtils.showNativeAd(inflate.adView, this)
         } else {
             Toast.makeText(this, "Image Not Found", Toast.LENGTH_SHORT).show()
             finish()

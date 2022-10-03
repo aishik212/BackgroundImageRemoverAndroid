@@ -49,6 +49,9 @@ android {
 }
 
 dependencies {
+    implementation project(":apprating")
+
+
     //SCALABLE IMAGE VIEW
     implementation("com.otaliastudios:zoomlayout:1.9.0")
 

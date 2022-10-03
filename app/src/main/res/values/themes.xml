@@ -25,4 +25,18 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:windowIsFloating">false</item>
     </style>
+
+    <style name="MyAlertDialogTheme" parent="Theme.AppCompat.DayNight.Dialog">
+        <item name="colorOnSurface">@color/primaryColor</item>
+        <item name="backgroundColor">@color/primaryColor</item>
+        <item name="background">@color/primaryColor</item>
+        <item name="android:background">@color/primaryColor</item>
+        <item name="boxBackgroundColor">@color/primaryColor</item>
+        <item name="colorAccent">@color/primaryLightColor</item>
+        <item name="android:colorBackground">@color/primaryDarkColor</item>
+        <item name="android:windowBackground">@color/primaryDarkColor</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="editTextBackground">@color/gnt_white</item>
+    </style>
+
 </resources>

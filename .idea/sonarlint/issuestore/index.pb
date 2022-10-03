@@ -15,20 +15,12 @@ Oapp/src/main/java/com/simpleapps/imagebackgroundremover/models/GalleryImages.kt
 Tapp/src/main/java/com/simpleapps/imagebackgroundremover/fragments/GalleryFragment.kt,8\5\8553e904bd8426235c5796591a9fedf1bb2652cf
 ç
 ]nativetemplates/src/main/java/com/google/android/ads/nativetemplates/NativeTemplateStyle.java,4\e\4eac8976d81610e0ab233ce087bb6b54c1f9c9b0
-á
-Wautobackgroundremover/src/main/java/com/slowmac/autobackgroundremover/SaveBitmapTask.kt,c\b\cb90f754a99322712ef7431f3517d77da17a8793
 P
  app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
-?
-settings.gradle,0\5\05efc8b1657769a27696d478ded1e95f38737233
 <
 build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
-â
-Yapp/src/main/java/com/simpleapps/imagebackgroundremover/activities/ImageViewerActivity.kt,2\c\2c3fddeecc8b72e59ff8caa9d0fe9cf54e404fec
 Ü
 Vnativetemplates/src/main/java/com/google/android/ads/nativetemplates/TemplateView.java,a\9\a9e27871a45250a616888b18d7e77f385a1fc524
-z
-Japp/src/main/java/com/simpleapps/imagebackgroundremover/utilities/utils.kt,c\f\cf015abe4f94ea0d5424af70eb297b89abfea74b
 :
 
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302

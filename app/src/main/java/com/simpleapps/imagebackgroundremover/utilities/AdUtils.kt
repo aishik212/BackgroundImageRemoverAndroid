@@ -23,7 +23,7 @@ import com.simpleapps.imagebackgroundremover.BuildConfig
 
 
 @SuppressLint("MissingPermission")
-public class adUtils {
+public class AdUtils {
     companion object {
 
         private fun adLoadingMessage(frameLayout: FrameLayout, activity: Activity) {
@@ -41,7 +41,7 @@ public class adUtils {
         }
 
         fun logAdResult(
-            AdType: String?,
+            adType: String?,
             errorAdType: String?,
             error: String?,
             activity: Activity?,
@@ -52,8 +52,8 @@ public class adUtils {
                 error = error!!.substring(0, 25)
             } catch (e: java.lang.Exception) {
             }
-            if (AdType != null) {
-                b.putString("AdType", AdType)
+            if (adType != null) {
+                b.putString("AdType", adType)
             }
             if (error != null && errorAdType != null) {
                 b.putString("Error", errorAdType)
@@ -61,7 +61,7 @@ public class adUtils {
             }
             if (activity != null) {
                 FirebaseAnalytics.getInstance(activity).logEvent("AdLog", b)
-                if (AdType != null && AdType == "AdKinowa") {
+                if (adType != null && adType == "AdKinowa") {
                     val bundle = Bundle()
                     bundle.putString("AdKinowa", "Success")
                     FirebaseAnalytics.getInstance(activity).logEvent("AdKinowa", bundle)
