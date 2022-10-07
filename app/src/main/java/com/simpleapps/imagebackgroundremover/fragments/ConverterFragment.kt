@@ -287,7 +287,7 @@ class ConverterFragment : Fragment() {
                 inflate1.outputPreview.setImageBitmap(bitmap)
             }
         }
-        inflate1.radioButton.performClick()
+        inflate1.radioButton2.performClick()
         inflate1.downloadButton.setOnClickListener {
             if (inflate1.radioButton.isChecked) {
                 create?.dismiss()
