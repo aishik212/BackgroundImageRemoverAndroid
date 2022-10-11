@@ -20,8 +20,8 @@ android {
         applicationId "com.simpleapps.imagebackgroundremover"
         minSdk 26
         targetSdk 32
-        versionCode 8
-        versionName "BGR_8"
+        versionCode 9
+        versionName "BGR_9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -70,14 +70,14 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
 
     implementation project(":autobackgroundremover")
-    implementation 'com.github.Drjacky:ImagePicker:2.1.16'
+    implementation 'com.github.Drjacky:ImagePicker:2.3.20'
 
     //ADS
-    implementation 'com.google.android.gms:play-services-ads:21.1.0'
+    implementation 'com.google.android.gms:play-services-ads:21.2.0'
     implementation project(":nativetemplates")
 
     implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.appcompat:appcompat:1.5.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'

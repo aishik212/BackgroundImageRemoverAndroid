@@ -9,6 +9,6 @@
     <string name="rins_med_ad_id" translatable="false">ca-app-pub-5453528366471630/5218730876</string>
     <string name="rins_all_ad_id" translatable="false">ca-app-pub-5453528366471630/5480501047</string>
     <string name="appOpenAllID" translatable="false">ca-app-pub-5453528366471630/2111119130</string>
-    <string name="appOpenHighID" translatable="false">ca-app-pub-5453528366471630/5479518505a</string>
-    <string name="appOpenMedID" translatable="false">ca-app-pub-5453528366471630/7679102599a</string>
+    <string name="appOpenHighID" translatable="false">ca-app-pub-5453528366471630/5479518505</string>
+    <string name="appOpenMedID" translatable="false">ca-app-pub-5453528366471630/7679102599</string>
 </resources>

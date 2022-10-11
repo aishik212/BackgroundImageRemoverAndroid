@@ -122,7 +122,7 @@ public class AdUtils {
 
 
         var bought = 0
-        var testStartInterstitialAd: RewardedInterstitialAd? = null
+        var downloadInterstitialAd: RewardedInterstitialAd? = null
 
         fun loadTestStartAd(activity: Activity, adType: Int = 0) {
             if (bought == 0) {
@@ -157,7 +157,7 @@ public class AdUtils {
                         object : RewardedInterstitialAdLoadCallback() {
                             override fun onAdLoaded(interstitialAd: RewardedInterstitialAd) {
                                 logAdResult("BGR_RIAD_$adTypeText", null, null, activity)
-                                testStartInterstitialAd = interstitialAd
+                                downloadInterstitialAd = interstitialAd
                             }
 
                             override fun onAdFailedToLoad(loadAdError: LoadAdError) {
@@ -171,7 +171,7 @@ public class AdUtils {
                             }
                         })
                 } else {
-                    testStartInterstitialAd = null
+                    downloadInterstitialAd = null
                 }
             }
         }

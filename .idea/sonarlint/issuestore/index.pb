@@ -5,8 +5,6 @@ Qapp/src/main/java/com/simpleapps/imagebackgroundremover/adapter/GalleryAdapter.
 ,nativetemplates/src/main/AndroidManifest.xml,3\e\3e2324a173141aefdb8131162566a64e8ce47869
 T
 $nativetemplates/proguard-rules.pgcfg,d\4\d45b4367cbeaa82979248430adbcc6efa5ad66e6
-L
-nativetemplates/build.gradle,a\0\a084fa664f68b1860dc3a10134fe1db3107ca51b
 H
 app/google-services.json,f\d\fd8d34b142d02ec743a8efefefd2c097961666e9
 
@@ -15,27 +13,19 @@ Oapp/src/main/java/com/simpleapps/imagebackgroundremover/models/GalleryImages.kt
 Tapp/src/main/java/com/simpleapps/imagebackgroundremover/fragments/GalleryFragment.kt,8\5\8553e904bd8426235c5796591a9fedf1bb2652cf
 ç
 ]nativetemplates/src/main/java/com/google/android/ads/nativetemplates/NativeTemplateStyle.java,4\e\4eac8976d81610e0ab233ce087bb6b54c1f9c9b0
-<
-build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
 Ü
 Vnativetemplates/src/main/java/com/google/android/ads/nativetemplates/TemplateView.java,a\9\a9e27871a45250a616888b18d7e77f385a1fc524
 :
 
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
-R
-"autobackgroundremover/build.gradle,2\7\27d7eb99b2ad572dcc090701ca535dd473695aa9
 ä
 Zautobackgroundremover/src/main/java/com/slowmac/autobackgroundremover/BackgroundRemover.kt,f\6\f6c9bd4f32f9e97885f4b8db946aa233c7c87a74
 ì
 cautobackgroundremover/src/main/java/com/slowmac/autobackgroundremover/OnBackgroundChangeListener.kt,3\6\36e62d4328cba2a7d98935f20c05622ac809bd2d
-z
-Japp/src/main/java/com/simpleapps/imagebackgroundremover/utilities/utils.kt,c\f\cf015abe4f94ea0d5424af70eb297b89abfea74b
 L
 apprating/proguard-rules.pro,2\a\2af58577b92f6b0134322d1c1ddf3927de8dcfb3
 D
 apprating/.gitignore,9\1\91f377fca87de64300b328d9ba83d76d3ed5f414
-F
-apprating/build.gradle,5\c\5c8de48f100b2d9545882e9f1c7d43553d0b989d
 B
 apprating/lint.xml,9\6\966fec97941ea66127fb1a2195a551b8cc837293
 á
@@ -52,16 +42,12 @@ Mapprating/src/test/java/com/suddenh4x/ratingdialog/utils/FeedbackUtilsTest.kt,
 Napprating/src/test/java/com/suddenh4x/ratingdialog/logging/RatingLoggerTest.kt,a\b\aba284cf27d8f59ecbe63ffa0cf5db38c027b33b
 É
 Sapprating/src/test/java/com/suddenh4x/ratingdialog/dialog/RateDialogFragmentTest.kt,4\8\48e2c925521bc2c2cc90c87ca328b3157131d4fa
-o
-?apprating/src/main/java/com/suddenh4x/ratingdialog/AppRating.kt,e\1\e1205a4bf3e5257681ccf03d4fe22a8fc56b82f4
 V
 &apprating/src/main/AndroidManifest.xml,9\7\9762520e1dd1686d1207f29a353e82495459fd45
 Å
 Qapprating/src/main/java/com/suddenh4x/ratingdialog/preferences/RatingThreshold.kt,e\2\e2d1a59d1ae370def2ac408c620a4231f15d20a9
 É
 Sapprating/src/main/java/com/suddenh4x/ratingdialog/preferences/ConditionsChecker.kt,e\8\e8464de730addf9f6652214a8b4d372ea0fb4146
-á
-Wautobackgroundremover/src/main/java/com/slowmac/autobackgroundremover/SaveBitmapTask.kt,c\b\cb90f754a99322712ef7431f3517d77da17a8793
 
 Oapprating/src/main/java/com/suddenh4x/ratingdialog/buttons/RateClickListener.kt,7\2\72b7d21a9aba1b34dbda605887b276b9d7a895dd
 y
@@ -70,8 +56,6 @@ Iapprating/src/main/java/com/suddenh4x/ratingdialog/buttons/RateButtons.kt,4\6\
 Napprating/src/main/java/com/suddenh4x/ratingdialog/preferences/MailSettings.kt,a\e\ae1690516a6a1231bdf97d36dd0f034e9960991b
 Ä
 Papprating/src/main/java/com/suddenh4x/ratingdialog/preferences/PreferenceUtil.kt,5\f\5f8fc4383b17490aad0dc307aec0adee4fc8cf05
-z
-Japprating/src/main/java/com/suddenh4x/ratingdialog/logging/RatingLogger.kt,9\e\9e31f46fc95671fd27f9327df96e483ffae813aa
 y
 Iapprating/src/main/java/com/suddenh4x/ratingdialog/utils/FeedbackUtils.kt,8\a\8a82a06444a5dd656066ce4423bc40ff2772f1ff
 ?
@@ -86,3 +70,15 @@ z
 Japprating/src/main/java/com/suddenh4x/ratingdialog/dialog/DialogManager.kt,7\e\7ef9c12d4a3d653e091dac6cf54107cffaa42266
 â
 Yapp/src/main/java/com/simpleapps/imagebackgroundremover/activities/ImageViewerActivity.kt,2\c\2c3fddeecc8b72e59ff8caa9d0fe9cf54e404fec
+P
+ app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
+F
+apprating/build.gradle,5\c\5c8de48f100b2d9545882e9f1c7d43553d0b989d
+o
+?apprating/src/main/java/com/suddenh4x/ratingdialog/AppRating.kt,e\1\e1205a4bf3e5257681ccf03d4fe22a8fc56b82f4
+z
+Japprating/src/main/java/com/suddenh4x/ratingdialog/logging/RatingLogger.kt,9\e\9e31f46fc95671fd27f9327df96e483ffae813aa
+á
+Wautobackgroundremover/src/main/java/com/slowmac/autobackgroundremover/SaveBitmapTask.kt,c\b\cb90f754a99322712ef7431f3517d77da17a8793
+z
+Japp/src/main/java/com/simpleapps/imagebackgroundremover/utilities/utils.kt,c\f\cf015abe4f94ea0d5424af70eb297b89abfea74b

@@ -30,7 +30,7 @@ class StartActivity : AppCompatActivity() {
 
     var num = 0
     var showAd = true
-    val l: Long = 5000
+    val l: Long = 6000
     val ctd = object : CountDownTimer(l, 500) {
         override fun onTick(millisUntilFinished: Long) {
             loadingTv?.text = "Loading"

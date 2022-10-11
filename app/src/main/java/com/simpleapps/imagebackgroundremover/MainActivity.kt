@@ -25,7 +25,7 @@ import com.simpleapps.imagebackgroundremover.databinding.IntersAdLoadingLayoutBi
 import com.simpleapps.imagebackgroundremover.fragments.ConverterFragment
 import com.simpleapps.imagebackgroundremover.fragments.GalleryFragment
 import com.simpleapps.imagebackgroundremover.utilities.AdUtils
-import com.simpleapps.imagebackgroundremover.utilities.AdUtils.Companion.testStartInterstitialAd
+import com.simpleapps.imagebackgroundremover.utilities.AdUtils.Companion.downloadInterstitialAd
 import com.simpleapps.imagebackgroundremover.utilities.utils
 import com.suddenh4x.ratingdialog.AppRating
 import com.suddenh4x.ratingdialog.preferences.MailSettings
@@ -44,8 +44,8 @@ class MainActivity : AppCompatActivity() {
         adLoadingDialog = builder2.create()
         adLoadingDialog?.show()
         Handler(Looper.getMainLooper()).postDelayed({
-            if (testStartInterstitialAd != null) {
-                testStartInterstitialAd?.fullScreenContentCallback = object :
+            if (downloadInterstitialAd != null) {
+                downloadInterstitialAd?.fullScreenContentCallback = object :
                     FullScreenContentCallback() {
                     override fun onAdDismissedFullScreenContent() {
                         super.onAdDismissedFullScreenContent()
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                         finish()
                     }
                 }
-                testStartInterstitialAd?.show(this) {}
+                downloadInterstitialAd?.show(this) {}
             } else {
                 adLoadingDialog?.dismiss()
                 finish()
@@ -84,7 +84,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val inflate = ActivityMainBinding.inflate(layoutInflater)
         setContentView(inflate.root)
-        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        if (!BuildConfig.DEBUG) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        }
         requestPermissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestPermission()
             ) { isGranted: Boolean ->

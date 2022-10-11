@@ -39,8 +39,8 @@ import com.simpleapps.imagebackgroundremover.R
 import com.simpleapps.imagebackgroundremover.databinding.DownloadConfirmationLayoutBinding
 import com.simpleapps.imagebackgroundremover.databinding.FragmentConverterBinding
 import com.simpleapps.imagebackgroundremover.databinding.IntersAdLoadingLayoutBinding
+import com.simpleapps.imagebackgroundremover.utilities.AdUtils.Companion.downloadInterstitialAd
 import com.simpleapps.imagebackgroundremover.utilities.AdUtils.Companion.loadTestStartAd
-import com.simpleapps.imagebackgroundremover.utilities.AdUtils.Companion.testStartInterstitialAd
 import com.simpleapps.imagebackgroundremover.utilities.utils
 import com.slowmac.autobackgroundremover.BackgroundRemover
 import com.slowmac.autobackgroundremover.DownloadListener
@@ -143,6 +143,7 @@ class ConverterFragment : Fragment() {
                         removeBG(inflate, tolerance)
                     }
                 } catch (e: Exception) {
+                    Log.d("texts", "onViewCreated: " + e.localizedMessage)
                 }
                 // Use the uri to load the image
             }
@@ -302,8 +303,8 @@ class ConverterFragment : Fragment() {
                     builder2.setView(adLoadingLayoutBinding.root)
                     adLoadingDialog = builder2.create()
                     adLoadingDialog?.show()
-                    if (testStartInterstitialAd != null) {
-                        testStartInterstitialAd?.fullScreenContentCallback =
+                    if (downloadInterstitialAd != null) {
+                        downloadInterstitialAd?.fullScreenContentCallback =
                             object : FullScreenContentCallback() {
                                 override fun onAdDismissedFullScreenContent() {
                                     super.onAdDismissedFullScreenContent()
@@ -317,7 +318,7 @@ class ConverterFragment : Fragment() {
                                     saveResult.saveBitmap(2)
                                 }
                             }
-                        testStartInterstitialAd?.show(activity) {}
+                        downloadInterstitialAd?.show(activity) {}
                         loadTestStartAd(activity)
                     } else {
                         showDownloadAd(activity, saveResult)
