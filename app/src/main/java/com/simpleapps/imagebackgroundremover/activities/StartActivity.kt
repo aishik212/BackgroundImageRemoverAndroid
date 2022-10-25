@@ -11,6 +11,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
+import com.simpleapps.admaster.AdUtils
 import com.simpleapps.imagebackgroundremover.MainActivity
 import com.simpleapps.imagebackgroundremover.R
 import com.simpleapps.imagebackgroundremover.databinding.StartActivityLayoutBinding
@@ -25,7 +26,30 @@ class StartActivity : AppCompatActivity() {
         val root = startActivityLayoutBinding?.root
         loadingTv = startActivityLayoutBinding?.loadingTv
         setContentView(root)
-        showAppOpenAd(this)
+        val bannerAdmobAds = listOf(
+            AdUtils.Companion.bannerAdObject(R.string.native_ad_id, "NATIVE_ALL")
+        )
+        val appOpenAdMobAds = listOf(R.string.appOpenHighID, R.string.appOpenMedID)
+        AdUtils.initializeMobileAds(this, "", appOpenAdMobAds, bannerAdmobAds)
+        {
+            AdUtils.showAppOpenAd(this, object : AdUtils.Companion.AppOpenListener {
+                override fun moveNext() {
+                    val listOf = listOf(
+                        AdUtils.Companion.SplashAdObject(R.string.rins_high_ad_id, "HIGH"),
+                        AdUtils.Companion.SplashAdObject(R.string.rins_med_ad_id, "MED"),
+                        AdUtils.Companion.SplashAdObject(R.string.rins_all_ad_id, "LOW")
+                    )
+                    AdUtils.loadSplashAD(this@StartActivity,
+                        listOf,
+                        object : AdUtils.Companion.SplashAdListener {
+                            override fun moveNext() {
+                                goToHomeAct()
+                            }
+                        })
+                }
+            })
+        }
+//        showAppOpenAd(this)
     }
 
     var num = 0

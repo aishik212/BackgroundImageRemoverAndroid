@@ -3,12 +3,13 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'com.google.firebase.firebase-perf'
 }
 
 android {
     signingConfigs {
         release {
-            storeFile file('C:\\Users\\TestAccount\\AndroidStudioProjects\\BETA\\imagebackgroundremover\\imagebackgroundremover.jks')
+            storeFile file('C:\\Users\\TestAccount\\AndroidStudioProjects\\imagebackgroundremover\\imagebackgroundremover.jks')
             storePassword 'imagebackgroundremover'
             keyAlias 'imagebackgroundremover'
             keyPassword 'imagebackgroundremover'
@@ -49,8 +50,10 @@ android {
 }
 
 dependencies {
-    implementation project(":apprating")
+    //AdMaster
+    implementation project(':AdMaster')
 
+    implementation project(":apprating")
 
     //SCALABLE IMAGE VIEW
     implementation("com.otaliastudios:zoomlayout:1.9.0")
@@ -59,6 +62,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:30.3.2')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-perf-ktx:20.2.0'
 
 
 //    implementation 'com.github.GhayasAhmad:auto-background-remover:1.0.1'

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primaryColor">@color/material_dynamic_primary80</color>
+    <color name="primaryLightColor">@color/material_dynamic_primary100</color>
+    <color name="primaryDarkColor">@color/material_dynamic_primary40</color>
+    <color name="secondaryColor">@color/material_dynamic_secondary60</color>
+    <color name="secondaryLightColor">@color/material_dynamic_secondary100</color>
+    <color name="secondaryDarkColor">@color/material_dynamic_secondary40</color>
+    <color name="primaryTextColor">@color/material_dynamic_neutral10</color>
+    <color name="secondaryTextColor">@color/material_dynamic_neutral_variant30</color>
+    <color name="buttonnormal">@color/material_dynamic_primary90</color>
+    <color name="highlight">@color/material_dynamic_primary100</color>
+    <color name="text">@color/material_dynamic_neutral99</color>
+    <color name="white">@color/material_dynamic_neutral_variant99</color>
+    <color name="color0">#A5D6A7</color>r
+    <color name="color1">#C5E1A5</color>
+    <color name="color2">#FFF59D</color>
+    <color name="color3">#FFCC80</color>
+    <color name="color4">#FFAB91</color>
+    <color name="color5">#EF9A9A</color>
+    <color name="colorEnd">#E57373</color>
+</resources>

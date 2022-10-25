@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/primaryColor">
+    <item>
+        <shape android:shape="rectangle">
+            <!--apply button background transparent, full opacity-->
+            <solid android:color="@color/white" />
+            <!--make button border solid color, nontransparent-->
+            <stroke
+                android:width="0dp"
+                android:color="@color/primaryDarkColor" />
+            <corners android:radius="5dp" />
+        </shape>
+    </item>
+</ripple>
+
