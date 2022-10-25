@@ -31,7 +31,12 @@ object BackgroundRemover {
     /**
      * Process the image to get buffer and image height and width
      * */
-    fun bitmapForProcessing(image: Bitmap, listener: OnBackgroundChangeListener, tolerance: Int) {
+    fun bitmapForProcessing(
+        image: Bitmap,
+        listener: OnBackgroundChangeListener,
+        tolerance: Int,
+        bgColor: Int,
+    ) {
         val input = InputImage.fromBitmap(image, 0)
         segment.process(input)
             .addOnSuccessListener { segmentationMask ->
@@ -40,7 +45,7 @@ object BackgroundRemover {
                 height = segmentationMask.height
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    val bitmap = removeBackgroundFromImage(image, listener, tolerance)
+                    val bitmap = removeBackgroundFromImage(image, listener, tolerance, bgColor)
                     withContext(Dispatchers.Main) {
                         listener.onSuccess(bitmap)
                     }
@@ -60,6 +65,7 @@ object BackgroundRemover {
         image: Bitmap,
         listener: OnBackgroundChangeListener,
         tolerance: Int = 50,
+        bgColor: Int = Color.WHITE,
     ): Bitmap {
         val bitmap = CoroutineScope(Dispatchers.IO).async {
             for (y in 0 until height) {
@@ -68,9 +74,9 @@ object BackgroundRemover {
                         val bgConfidence = ((1.0 - buffer.float) * 250).toInt()
                         try {
                             if (bgConfidence >= 250) {
-                                image.setPixel(x, y, Color.WHITE)
+                                image.setPixel(x, y, bgColor)
                             } else if (bgConfidence > tolerance) {
-                                image.setPixel(x, y, Color.WHITE)
+                                image.setPixel(x, y, bgColor)
 //                                image.setPixel(x, y, Color.BLACK)
                             }
                             listener.onChange(image)

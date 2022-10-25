@@ -21,8 +21,8 @@ android {
         applicationId "com.simpleapps.imagebackgroundremover"
         minSdk 26
         targetSdk 32
-        versionCode 9
-        versionName "BGR_9"
+        versionCode 10
+        versionName "BGR_10"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -50,6 +50,10 @@ android {
 }
 
 dependencies {
+    //Color Picker
+    implementation 'com.github.Dhaval2404:ColorPicker:2.3'
+
+
     //AdMaster
     implementation project(':AdMaster')
 

@@ -18,8 +18,6 @@ Vnativetemplates/src/main/java/com/google/android/ads/nativetemplates/TemplateVi
 :
 
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
-Š
-Zautobackgroundremover/src/main/java/com/slowmac/autobackgroundremover/BackgroundRemover.kt,f\6\f6c9bd4f32f9e97885f4b8db946aa233c7c87a74
 “
 cautobackgroundremover/src/main/java/com/slowmac/autobackgroundremover/OnBackgroundChangeListener.kt,3\6\36e62d4328cba2a7d98935f20c05622ac809bd2d
 L
@@ -78,15 +76,9 @@ z
 Japprating/src/main/java/com/suddenh4x/ratingdialog/logging/RatingLogger.kt,9\e\9e31f46fc95671fd27f9327df96e483ffae813aa
 ‡
 Wautobackgroundremover/src/main/java/com/slowmac/autobackgroundremover/SaveBitmapTask.kt,c\b\cb90f754a99322712ef7431f3517d77da17a8793
-z
-Japp/src/main/java/com/simpleapps/imagebackgroundremover/utilities/utils.kt,c\f\cf015abe4f94ea0d5424af70eb297b89abfea74b
 L
 nativetemplates/build.gradle,a\0\a084fa664f68b1860dc3a10134fe1db3107ca51b
-†
-Vapp/src/main/java/com/simpleapps/imagebackgroundremover/fragments/ConverterFragment.kt,6\f\6f3ce21f5c174dba319bfc2bd3f77889e9d0d396
 w
 Gapp/src/main/java/com/simpleapps/imagebackgroundremover/MainActivity.kt,c\6\c639fdd887bc325c0f5f717aaa060c698163613b
 R
 "autobackgroundremover/build.gradle,2\7\27d7eb99b2ad572dcc090701ca535dd473695aa9
-|
-Lapp/src/main/java/com/simpleapps/imagebackgroundremover/utilities/AdUtils.kt,6\9\694d078110c1c15577321596330f685a6251a98c

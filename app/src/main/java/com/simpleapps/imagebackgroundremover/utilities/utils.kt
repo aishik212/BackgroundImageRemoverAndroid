@@ -6,6 +6,8 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.simpleapps.imagebackgroundremover.R
@@ -49,6 +51,10 @@ class utils {
         fun mark(src: Bitmap, watermark: String, context: Context?): Bitmap {
             val w = src.width
             val h = src.height
+            Log.d("texts", "mark: 1 " + src.height + " " + src.width)
+            Log.d("texts",
+                "mark: 2 " + src.getScaledHeight(DisplayMetrics()) + " " + src.getScaledWidth(
+                    DisplayMetrics()))
             val result = Bitmap.createBitmap(w, h, src.config)
             val canvas = Canvas(result)
             canvas.drawBitmap(src, 0f, 0f, null)
@@ -62,6 +68,7 @@ class utils {
             paint.isAntiAlias = true
             paint.isUnderlineText = false
             canvas.drawText(watermark, 0F, h * 9F / 100F, paint)
+            Log.d("texts", "mark: 3 " + result.height + " " + result.width)
             return result
         }
 

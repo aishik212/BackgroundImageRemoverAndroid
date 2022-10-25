@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.DocumentsContract
@@ -24,6 +25,8 @@ import androidx.core.graphics.scale
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
+import com.github.dhaval2404.colorpicker.ColorPickerDialog
+import com.github.dhaval2404.colorpicker.model.ColorShape
 import com.github.drjacky.imagepicker.ImagePicker
 import com.github.drjacky.imagepicker.constant.ImageProvider
 import com.google.android.gms.ads.AdError
@@ -58,6 +61,8 @@ class ConverterFragment : Fragment() {
     lateinit var target: File
     lateinit var FragContext: Context
     lateinit var FragActivity: Activity
+    var tolerance: Int = 50
+    var bgColor: Int = Color.WHITE
 
 
     override fun onCreateView(
@@ -88,9 +93,7 @@ class ConverterFragment : Fragment() {
                         File("${FragContext.cacheDir.absoluteFile}/images/${fileFromUri?.name}")
                     target.parentFile.mkdirs()
                     target.delete()
-                    inflate.addView.visibility = View.GONE
-                    inflate.oldimg.visibility = View.VISIBLE
-                    inflate.procView.visibility = View.VISIBLE
+                    hideAddImageView()
                     inflate.newimg.visibility = View.GONE
                     if (target.createNewFile()) {
                         Glide.with(inflate.oldimg)
@@ -114,11 +117,10 @@ class ConverterFragment : Fragment() {
                             height /= 2
                         }
                         scale = decodeFile.scale(width, height, true)
-                        inflate.addView.visibility = View.GONE
-                        inflate.oldimg.visibility = View.VISIBLE
-                        inflate.procView.visibility = View.VISIBLE
+                        scale = reduceOutputImageSize(decodeFile, 1000)
+                        hideAddImageView()
                         inflate.newimg.setImageBitmap(scale)
-                        val tolerance = 255 / 2
+                        tolerance = 255 / 2
                         val seekBar = inflate.seekBar
                         seekBar.visibility = View.VISIBLE
                         seekBar.setOnSeekBarChangeListener(object :
@@ -136,11 +138,12 @@ class ConverterFragment : Fragment() {
                                 inflate.progressTv.visibility = View.VISIBLE
                                 inflate.progressTv.text =
                                     "Detection Sensitivity ${((p0?.progress ?: 0) * 100F / 255).roundToInt()}%"
-                                removeBG(inflate, p0?.progress ?: 50)
+                                tolerance = p0?.progress ?: 50
+                                removeBG(inflate)
                             }
                         })
                         seekBar.progress = tolerance
-                        removeBG(inflate, tolerance)
+                        removeBG(inflate)
                     }
                 } catch (e: Exception) {
                     Log.d("texts", "onViewCreated: " + e.localizedMessage)
@@ -162,13 +165,17 @@ class ConverterFragment : Fragment() {
         }
     }
 
+    private fun hideAddImageView() {
+        inflate.addView.visibility = View.GONE
+        inflate.oldimg.visibility = View.VISIBLE
+        inflate.procView.visibility = View.VISIBLE
+    }
+
     private fun removeBG(
         inflate: FragmentConverterBinding,
-        tolerance: Int,
     ) {
         inflate.progressTv.visibility = View.VISIBLE
-        inflate.saveImg.visibility = View.GONE
-        inflate.newimg.visibility = View.GONE
+        saveImgGone(inflate)
         val decodeFile = BitmapFactory.decodeFile(target.absolutePath)
         var width = decodeFile.width
         var height = decodeFile.height
@@ -195,8 +202,7 @@ class ConverterFragment : Fragment() {
                         if (l > 1000) {
                             FragActivity.runOnUiThread {
                                 inflate.procView.visibility = View.VISIBLE
-                                inflate.saveImg.visibility = View.GONE
-                                inflate.newimg.visibility = View.GONE
+                                saveImgGone(inflate)
                             }
                             lastChange = System.currentTimeMillis()
                         }
@@ -205,14 +211,28 @@ class ConverterFragment : Fragment() {
                     override fun onSuccess(bitmap: Bitmap) {
                         utils.logProcessingEvent(context, "SUCCESS")
                         inflate.procView.visibility = View.GONE
-                        inflate.newimg.visibility = View.VISIBLE
                         inflate.newimg.setImageBitmap(bitmap)
-                        inflate.saveImg.visibility = View.VISIBLE
+                        saveImgVisible(inflate)
                         val context = context
                         if (context != null && !hasPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                 context)
                         ) {
                             getPermission()
+                        }
+                        inflate.changeBg.setOnClickListener {
+                            activity?.let { it1 ->
+                                ColorPickerDialog
+                                    .Builder(it1)                        // Pass Activity Instance
+                                    .setTitle("Pick Theme")            // Default "Choose Color"
+                                    .setColorShape(ColorShape.SQAURE)   // Default ColorShape.CIRCLE
+                                    .setDefaultColor("#FFFFFF")     // Pass Default Color
+                                    .setColorListener { color, colorHex ->
+                                        Log.d("texts", "onSuccess: " + color + " " + colorHex)
+                                        bgColor = color
+                                        removeBG(inflate)
+                                    }
+                                    .show()
+                            }
                         }
                         inflate.saveImg.setOnClickListener {
                             showSaveDialog(bitmap, object : SaveResult {
@@ -224,12 +244,7 @@ class ConverterFragment : Fragment() {
                                         bitmap.height / divideBy
                                     )
                                     if (divideBy == 2) {
-                                        while (outputImage.width > 200) {
-                                            outputImage = bitmap.scale(
-                                                outputImage.width - 50,
-                                                outputImage.height - 50
-                                            )
-                                        }
+                                        outputImage = reduceOutputImageSize(bitmap)
                                         outputImage =
                                             utils.mark(outputImage, "SimpleAppsOfficial", context)
                                     }
@@ -256,8 +271,38 @@ class ConverterFragment : Fragment() {
                         }
                         hideProgressDialog(inflate)
                     }
-                }, tolerance)
+                }, tolerance, bgColor)
         }
+    }
+
+    private fun reduceOutputImageSize(
+        bitmap: Bitmap,
+        maxSize: Int = 200,
+    ): Bitmap {
+        var outputImage1 = bitmap
+        while (outputImage1.width > maxSize && outputImage1.height > maxSize) {
+            Log.d("texts",
+                "reduceOutputImageSize: " + outputImage1.width + " " + outputImage1.height)
+            outputImage1 = bitmap.scale(
+                outputImage1.width * 90 / 100,
+                outputImage1.height * 90 / 100
+            )
+        }
+        return outputImage1
+    }
+
+    //After Processing Completed
+    private fun saveImgVisible(inflate: FragmentConverterBinding) {
+//        ratingDialog?.showIfMeetsConditions()
+        inflate.newimg.visibility = View.VISIBLE
+        inflate.saveImg.visibility = View.VISIBLE
+        inflate.changeBg.visibility = View.VISIBLE
+    }
+
+    private fun saveImgGone(inflate: FragmentConverterBinding) {
+        inflate.saveImg.visibility = View.GONE
+        inflate.newimg.visibility = View.GONE
+        inflate.changeBg.visibility = View.GONE
     }
 
     interface SaveResult {
@@ -275,8 +320,8 @@ class ConverterFragment : Fragment() {
         outputImage = bitmap
         while (outputImage.width > 200) {
             outputImage = bitmap.scale(
-                outputImage.width - 50,
-                outputImage.height - 50
+                outputImage.width * 90 / 100,
+                outputImage.height * 90 / 100
             )
         }
         outputImage = utils.mark(outputImage, "SimpleAppsOfficial", context)
