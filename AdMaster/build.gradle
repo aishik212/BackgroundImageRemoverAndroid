@@ -29,14 +29,22 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
+    implementation("com.android.volley:volley:1.2.1")
+
+    implementation 'com.google.code.gson:gson:2.10'
+
     //Firebase Perf
     implementation 'com.google.firebase:firebase-perf-ktx:20.1.1'
 
     //AdKinowa
     implementation 'com.google.android.gms:play-services-ads:21.2.0'
+//    implementation 'com.byappsoft.huvleadlib:HuvleAdLib:1.4.2'
 
     //Glide
     implementation 'com.github.bumptech.glide:glide:4.13.1'
@@ -50,7 +58,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:21.1.1'
 
 
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.6.1'
     testImplementation 'junit:junit:4.13.2'

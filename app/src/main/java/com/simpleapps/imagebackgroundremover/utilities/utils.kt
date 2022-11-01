@@ -72,9 +72,10 @@ class utils {
             return result
         }
 
-        fun logSaveEvent(context: Context?, quality: String) {
+        fun logSaveEvent(context: Context?, quality: String, bgColor: String) {
             val bundle = Bundle()
-            bundle.putString("SAVE", quality)
+            bundle.putString("Quality", quality)
+            bundle.putString("Color", bgColor)
             if (context != null) {
                 logEvent(context, "SAVE", bundle)
             }

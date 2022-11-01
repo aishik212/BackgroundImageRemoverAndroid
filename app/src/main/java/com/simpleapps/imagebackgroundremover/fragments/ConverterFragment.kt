@@ -63,6 +63,7 @@ class ConverterFragment : Fragment() {
     lateinit var FragActivity: Activity
     var tolerance: Int = 50
     var bgColor: Int = Color.WHITE
+    var bgColorHex: String = "#FFFFFF"
 
 
     override fun onCreateView(
@@ -220,15 +221,16 @@ class ConverterFragment : Fragment() {
                             getPermission()
                         }
                         inflate.changeBg.setOnClickListener {
-                            activity?.let { it1 ->
+                            activity?.let {
                                 ColorPickerDialog
-                                    .Builder(it1)                        // Pass Activity Instance
-                                    .setTitle("Pick Theme")            // Default "Choose Color"
+                                    .Builder(requireActivity())
+                                    .setTitle("Pick background Color")            // Default "Choose Color"
                                     .setColorShape(ColorShape.SQAURE)   // Default ColorShape.CIRCLE
                                     .setDefaultColor("#FFFFFF")     // Pass Default Color
                                     .setColorListener { color, colorHex ->
                                         Log.d("texts", "onSuccess: " + color + " " + colorHex)
                                         bgColor = color
+                                        bgColorHex = colorHex
                                         removeBG(inflate)
                                     }
                                     .show()
@@ -238,7 +240,7 @@ class ConverterFragment : Fragment() {
                             showSaveDialog(bitmap, object : SaveResult {
                                 override fun saveBitmap(divideBy: Int) {
                                     utils.logSaveEvent(context,
-                                        if (divideBy == 2) "Low" else "High")
+                                        if (divideBy == 2) "Low" else "High", bgColorHex)
                                     var outputImage = bitmap.scale(
                                         bitmap.width / divideBy,
                                         bitmap.height / divideBy

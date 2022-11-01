@@ -20,13 +20,17 @@ class StartActivity : AppCompatActivity() {
         loadingTv = startActivityLayoutBinding?.loadingTv
         setContentView(root)
         val bannerAdmobAds = listOf(
-            AdUtils.Companion.bannerAdObject(R.string.native_ad_id, "NATIVE_ALL")
+            AdUtils.Companion.bannerAdObject(R.string.native_high_ad_id, "NATIVE_HIGH"),
+            AdUtils.Companion.bannerAdObject(R.string.banner_high_ad_id, "BANNER_HIGH"),
+            AdUtils.Companion.bannerAdObject(R.string.native_med_ad_id, "NATIVE_MED"),
+            AdUtils.Companion.bannerAdObject(R.string.banner_med_ad_id, "BANNER_MED")
         )
         val appOpenAdMobAds = listOf(R.string.appOpenHighID, R.string.appOpenMedID)
         AdUtils.initializeMobileAds(this, "", appOpenAdMobAds, bannerAdmobAds)
         {
             if (BuildConfig.DEBUG) {
                 goToHomeAct()
+                AdUtils.adKinowaTimeinSecs = 5
             } else {
                 AdUtils.showAppOpenAd(this, object : AdUtils.Companion.AppOpenListener {
                     override fun moveNext() {

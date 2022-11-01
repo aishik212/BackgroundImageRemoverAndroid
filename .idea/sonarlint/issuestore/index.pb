@@ -78,29 +78,13 @@ Japprating/src/main/java/com/suddenh4x/ratingdialog/logging/RatingLogger.kt,9\e
 Wautobackgroundremover/src/main/java/com/slowmac/autobackgroundremover/SaveBitmapTask.kt,c\b\cb90f754a99322712ef7431f3517d77da17a8793
 L
 nativetemplates/build.gradle,a\0\a084fa664f68b1860dc3a10134fe1db3107ca51b
-w
-Gapp/src/main/java/com/simpleapps/imagebackgroundremover/MainActivity.kt,c\6\c639fdd887bc325c0f5f717aaa060c698163613b
 R
 "autobackgroundremover/build.gradle,2\7\27d7eb99b2ad572dcc090701ca535dd473695aa9
 <
 build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
-?
-settings.gradle,0\5\05efc8b1657769a27696d478ded1e95f38737233
 g
 7AdMaster/AdMaster/src/main/res/layout/game_layout_1.xml,0\c\0c8f516ae23baf7247d108fceb6e2b29e539646d
-i
-9AdMaster/src/main/java/com/simpleapps/admaster/AdUtils.kt,7\7\77e062fc4017db59e49991c3427c1602fbbd300a
-E
-AdMaster/build.gradle,d\3\d33beb7a96e3aa9d0e872b52355fc7fe15bf8e4a
-ƒ
-Sapp/src/main/java/com/simpleapps/imagebackgroundremover/activities/StartActivity.kt,c\e\ceb34d0e6d2c58bd9d9af579d3dea2471d836faf
 Š
 Zautobackgroundremover/src/main/java/com/slowmac/autobackgroundremover/BackgroundRemover.kt,f\6\f6c9bd4f32f9e97885f4b8db946aa233c7c87a74
-|
-Lapp/src/main/java/com/simpleapps/imagebackgroundremover/utilities/AdUtils.kt,6\9\694d078110c1c15577321596330f685a6251a98c
-†
-Vapp/src/main/java/com/simpleapps/imagebackgroundremover/fragments/ConverterFragment.kt,6\f\6f3ce21f5c174dba319bfc2bd3f77889e9d0d396
-z
-Japp/src/main/java/com/simpleapps/imagebackgroundremover/utilities/utils.kt,c\f\cf015abe4f94ea0d5424af70eb297b89abfea74b
-@
-app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
+c
+3AdMaster/src/main/main/res/layout/game_layout_1.xml,0\0\00174f76542ab0261ca84dbc3de923cef46761cb

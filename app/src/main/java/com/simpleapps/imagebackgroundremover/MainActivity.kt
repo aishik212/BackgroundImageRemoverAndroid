@@ -18,13 +18,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
-import com.google.android.gms.ads.MobileAds
 import com.google.android.material.tabs.TabLayoutMediator
+import com.simpleapps.admaster.AdUtils.Companion.showAdFromChoices
 import com.simpleapps.imagebackgroundremover.databinding.ActivityMainBinding
 import com.simpleapps.imagebackgroundremover.databinding.IntersAdLoadingLayoutBinding
 import com.simpleapps.imagebackgroundremover.fragments.ConverterFragment
 import com.simpleapps.imagebackgroundremover.fragments.GalleryFragment
-import com.simpleapps.imagebackgroundremover.utilities.AdUtils
 import com.simpleapps.imagebackgroundremover.utilities.AdUtils.Companion.downloadInterstitialAd
 import com.simpleapps.imagebackgroundremover.utilities.utils
 import com.suddenh4x.ratingdialog.AppRating
@@ -96,11 +95,9 @@ class MainActivity : AppCompatActivity() {
                     Log.d("texts", "getPermission: REJECTED")
                 }
             }
-        MobileAds.initialize(applicationContext) {
-            AdUtils.showNativeAd(inflate.adView,
-                this@MainActivity)
-            AdUtils.loadTestStartAd(this)
-        }
+//        AdUtils.showNativeAd(inflate.adView,
+//            this@MainActivity)
+        showAdFromChoices(inflate.adView, this, lifecycle)
         val tabLayout = inflate.tabLayout
         val viewPager = inflate.viewpager
         val adapter = ViewPagerAdapter(supportFragmentManager, lifecycle)

@@ -73,7 +73,7 @@ public class AdUtils {
         fun showNativeAd(frameLayout: FrameLayout, activity: Activity) {
             adLoadingMessage(frameLayout, activity)
             val adLoader = AdLoader.Builder(activity,
-                activity.getString(com.simpleapps.imagebackgroundremover.R.string.native_ad_id))
+                activity.getString(com.simpleapps.imagebackgroundremover.R.string.native_high_ad_id))
                 .forNativeAd { nativeAd: NativeAd? ->
                     activity.runOnUiThread {
                         logAdResult("NATIVE_ALL", null, null, activity)

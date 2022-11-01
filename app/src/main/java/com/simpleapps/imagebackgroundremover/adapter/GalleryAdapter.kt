@@ -21,7 +21,7 @@ class GalleryAdapter : RecyclerView.Adapter<GalleryAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(ImageListRowLayoutBinding.inflate(LayoutInflater.from(parent.context)))
-//        ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.image_list_row_layout, parent, false))
+//        ViewHolder(LayoutInflater.from(parent.activity).inflate(R.layout.image_list_row_layout, parent, false))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(data[position], activity)

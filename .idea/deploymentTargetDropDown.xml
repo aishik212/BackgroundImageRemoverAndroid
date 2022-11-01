@@ -7,19 +7,20 @@
         <deviceKey>
           <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="D:\avd\Pixel_4_API_31_1.avd" />
+            <value value="D:\avd\Pixel_4_API_29_1.avd" />
           </Key>
         </deviceKey>
       </Target>
     </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2022-10-25T09:06:17.730381800Z" />
+    <timeTargetWasSelectedWithDropDown value="2022-11-01T16:19:35.920294300Z" />
+    <multipleDevicesSelectedInDropDown value="true" />
     <runningDeviceTargetsSelectedWithDialog>
       <Target>
         <type value="RUNNING_DEVICE_TARGET" />
         <deviceKey>
           <Key>
             <type value="SERIAL_NUMBER" />
-            <value value="2f4d1781" />
+            <value value="98ebc214" />
           </Key>
         </deviceKey>
       </Target>
@@ -30,7 +31,7 @@
         <deviceKey>
           <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\avd\Pixel_4_API_33.avd" />
+            <value value="D:\avd\Pixel_4_API_29_1.avd" />
           </Key>
         </deviceKey>
       </Target>

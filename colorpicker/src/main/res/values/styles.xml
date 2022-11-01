@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CustomAlertDialog" parent="android:Theme.Material.Dialog.Alert">
+        <item name="android:windowBackground">#B39DDB</item>
+    </style>
+
+</resources>

@@ -18,7 +18,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Image Background Remover"
 include ':app'
-include ':cutout'
+include ':colorpicker'
 include ':autobackgroundremover'
 include ':nativetemplates'
 include ':apprating'
